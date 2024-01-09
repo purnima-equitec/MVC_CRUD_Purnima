@@ -1,0 +1,214 @@
+﻿@*@model IEnumerable<MVC_DAPPER_CRUD.Models.EmployeeModel>*@
+@model PagedList.IPagedList<MVC_DAPPER_CRUD.Models.EmployeeModel>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Index";
+}
+<h4>Employee Data</h4>
+<div class="row">
+    <div class="col-md-8 text-right">
+        @Html.ActionLink("Create New", "AddOrEdit", "Employee", new { @class = "btn btn-primary" })
+        @Html.ActionLink("Deleted Items", "GetAllDeletedEmployees", "Employee", new { @class = "btn btn-primary" })
+
+        @using (Html.BeginForm("ExportToExcel", "Employee", FormMethod.Post, new { target = "_blank", @class = "d-inline" }))
+        {
+            <button type="submit" class="btn btn-success">Export to Excel</button>
+        }
+        <button class="btn btn-primary" onclick="printDetails()">Print</button>
+    </div>
+    <div class="col-md-1">
+        @Html.DropDownList("pageSize", ViewBag.SelectedPageSize as SelectList, new { @class = "form-control", onchange = "changePageSize()" })
+    </div>
+
+    <div class="col-md-2">
+        <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+    </div>
+    <div class="col-md-1">
+        <button type="button" class="btn btn-outline-primary" onclick="searchTable()">Search</button>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <hr />
+    </div>
+</div>
+<div class="container-fluid">
+    <table class="table table-striped table-bordered text-center" id="printableData">
+        <tr>
+            <th onclick="sortTable(0)">
+                Name
+            </th>
+            <th onclick="sortTable(1)">
+                Designation
+            </th>
+            <th onclick="sortTable(2)">
+                Salary
+            </th>
+            <th onclick="sortTable(3)">
+                Gender
+            </th>
+            <th onclick="sortTable(4)">
+                Email
+            </th>
+            <th onclick="sortTable(5)">
+                Age
+            </th>
+            <th onclick="sortTable(6)">
+                Skills
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EMPNAME)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EMP_DESIGNATION)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EMP_SALARY)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EMP_GENDER)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EMP_EMAIL)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EMP_AGE)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EMP_SKILLS)
+                </td>
+                <td>
+                    <div class="btn-group" role="group">
+                        @Html.ActionLink("Edit", "AddOrEdit", new { id = item.EMPID }, new { @class = "btn btn-outline-secondary" })
+                        @Html.ActionLink("Delete", "DeleteData", new { id = item.EMPID }, new { @class = "btn btn-outline-secondary" })
+                        @Html.ActionLink("Details", "DisplayData", new { id = item.EMPID }, new { @class = "btn btn-outline-secondary" })
+                    </div>
+                </td>
+            </tr>
+        }
+    </table>
+    @{
+        int totalPages = Model.PageCount;
+        int currentPage = Model.PageNumber;
+        int pageSize = ViewBag.SelectedPageSize != null ? Convert.ToInt32(ViewBag.SelectedPageSize.SelectedValue) : 5;
+    }
+</div>
+<div class="text-center mt-4">
+    <ul class="pagination">
+        @for (int i = 1; i <= totalPages; i++)
+        {
+            string pageUrl = Url.Action("Index", new { page = i, pageSize });
+            <li class="page-item @(i == currentPage ? "active" : "")">
+                <a class="page-link" href="@pageUrl">@i</a>
+            </li>
+        }
+    </ul>
+</div>
+
+<script>
+    var currentColumn = -1;
+    var ascendingOrder = true;
+
+    function sortTable(columnIndex) {
+        var shouldSwitch;
+        var table = document.getElementById('printableData');
+        var switching = true;
+
+        while (switching) {
+            switching = false;
+            var rows = table.rows;
+
+            for (var i = 1; i < rows.length - 1; i++) {
+                shouldSwitch = false;
+
+                var x = rows[i].getElementsByTagName('td')[columnIndex];
+                var y = rows[i + 1].getElementsByTagName('td')[columnIndex];
+
+                if (ascendingOrder) {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            }
+        }
+
+        if (currentColumn === columnIndex) {
+            ascendingOrder = !ascendingOrder;
+        } else {
+            ascendingOrder = true;
+            currentColumn = columnIndex;
+        }
+    }
+
+    function searchTable() {
+        var input, filter, table, rows, cell, i, j, txtValue;
+        input = document.getElementById('searchInput');
+        filter = input.value.toUpperCase();
+        table = document.getElementById('printableData');
+        rows = table.getElementsByTagName('tr');
+        for (i = 0; i < rows.length; i++) {
+            var cells = rows[i].getElementsByTagName('td');
+            var rowMatch = false;
+            for (j = 0; j < cells.length; j++) {
+                cell = cells[j];
+                if (cell) {
+                    txtValue = cell.textContent || cell.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        rowMatch = true;
+                        break;
+                    }
+                }
+            }
+            rows[i].style.display = rowMatch ? "" : "none";
+        }
+    }
+
+    function printDetails() {
+        let table = document.getElementById('printableData');
+        let buttons = document.querySelectorAll('.btn');
+
+        if (table) {
+            buttons.forEach(button => {
+                button.style.display = 'none';
+            });
+            let printWindow = window.open('', '_blank');
+            let tableWithStyle = table.outerHTML.replace(/<table/g, '<table style="border-collapse: collapse; border: 1px solid #000;"');
+            tableWithStyle = tableWithStyle.replace(/<td/g, '<td style="border: 1px solid #000; padding: 8px;"');
+            printWindow.document.write(tableWithStyle);
+            printWindow.document.close();
+            printWindow.print();
+            buttons.forEach(button => {
+                button.style.display = '';
+            });
+        } else {
+            console.error('table not found');
+        }
+    }
+    function changePageSize() {
+    var selectedPageSize = document.getElementById('pageSize').value;
+    window.location.href = '@Url.Action("Index")?pageSize=' + selectedPageSize;
+}
+
+</script>
+
+
+
+

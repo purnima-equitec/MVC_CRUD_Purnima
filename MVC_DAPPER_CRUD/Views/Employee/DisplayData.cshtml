@@ -1,0 +1,86 @@
+﻿@model MVC_DAPPER_CRUD.Models.EmployeeModel
+
+@{
+    ViewBag.Title = "DisplayData";
+}
+
+<div class="employee-details">
+    <h4>Employee Details : </h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <div class="row">
+            <div class="col-md-3">
+        <dt>
+            @Html.DisplayNameFor(model => model.EMPID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EMPID)
+        </dd>
+</div>
+<div class="col-md-3">
+    <dt>
+        @Html.DisplayNameFor(model => model.EMPNAME)
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.EMPNAME)
+    </dd>
+</div>
+<div class="col-md-3">
+    <dt>
+        @Html.DisplayNameFor(model => model.EMP_DESIGNATION)
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.EMP_DESIGNATION)
+    </dd>
+</div>
+<div class="col-md-3">
+    <dt>
+        @Html.DisplayNameFor(model => model.EMP_SALARY)
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.EMP_SALARY)
+    </dd>
+</div>
+    </div>
+
+<div class="row">
+    <div class="col-md-3">
+        <dt>
+            @Html.DisplayNameFor(model => model.EMP_GENDER)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EMP_GENDER)
+        </dd>
+    </div>
+    <div class="col-md-3">
+        <dt>
+            @Html.DisplayNameFor(model => model.EMP_EMAIL)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EMP_EMAIL)
+        </dd>
+    </div>
+    <div class="col-md-3">
+        <dt>
+            @Html.DisplayNameFor(model => model.EMP_AGE)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EMP_AGE)
+        </dd>
+    </div>
+    <div class="col-md-3">
+        <dt>
+            @Html.DisplayNameFor(model => model.EMP_SKILLS)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EMP_SKILLS)
+        </dd>
+    </div>
+</div>
+    </dl>
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+

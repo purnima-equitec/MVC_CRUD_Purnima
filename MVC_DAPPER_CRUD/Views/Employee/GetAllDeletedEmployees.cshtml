@@ -1,0 +1,66 @@
+﻿@model IEnumerable<MVC_DAPPER_CRUD.Models.EmployeeModel>
+
+@{
+    ViewBag.Title = "GetAllDeletedEmployees";
+}
+<h4>Deleted Employee Details : </h4>
+<hr />
+<table class="table table-bordered table-striped text-center">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.EMPNAME)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EMP_DESIGNATION)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EMP_SALARY)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EMP_GENDER)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EMP_EMAIL)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EMP_AGE)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EMP_SKILLS)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EMPNAME)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EMP_DESIGNATION)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EMP_SALARY)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EMP_GENDER)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EMP_EMAIL)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EMP_AGE)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EMP_SKILLS)
+            </td>
+            <td>
+                @Html.ActionLink("Restore", "RestoreEmployee", new { id = item.EMPID }, new { @class = "btn btn-primary" })
+            </td>
+        </tr>
+    }
+</table>
+<p>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</p>
